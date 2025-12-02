@@ -1,0 +1,32 @@
+# Core API Framework
+fastapi==0.110.0
+fastapi-utils
+uvicorn==0.29.0
+
+# ML & AI Libraries
+scikit-learn==1.4.2
+xgboost==2.1.1
+tensorflow==2.15.0
+numpy==1.26.4
+pandas==2.2.2
+
+# Utilities
+requests==2.31.0
+joblib==1.4.2
+python-multipart==0.0.9
+
+# Logging & Time Utilities
+python-dateutil==2.9.0.post0
+
+# For CSV and JSON logging compatibility
+orjson==3.9.15
+
+# Optional (for SHAP explainability, if you plan to reuse)
+shap==0.45.0
+
+# Compatibility fixes
+protobuf==4.25.3
+
+typing_inspect
+
+httpx
