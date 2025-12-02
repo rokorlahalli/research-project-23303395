@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-assistant
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+    spec:
+      containers:
+      - name: ollama
+        image: ollama/ollama:latest
+        env:
+          - name: OLLAMA_KEEP_ALIVE
+            value: "15m"
+          - name: OLLAMA_MAX_LOADED_MODELS
+            value: "1"
+        command: ["/bin/sh", "-c"]
+        args:
+          - ollama serve
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 11434
+        volumeMounts:
+        - name: ollama-data
+          mountPath: /root/.ollama   # model cache stored here
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "1Gi"
+          limits:
+            cpu: "1"
+            memory: "2Gi"
+
+      # Init container auto-pulls llama3
+      initContainers:
+      - name: init-pull-model
+        image: ollama/ollama:latest
+        command:
+          - /bin/sh
+          - -c
+          - |
+            echo "Starting Ollama server..."
+            ollama serve &
+
+            # Wait for server
+            sleep 10
+
+            echo "Pulling model..."
+            ollama pull llama3.2:1b
+
+            echo "Model pull complete!"
+        volumeMounts:
+          - name: ollama-data
+            mountPath: /root/.ollama
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "1Gi"
+       
+      volumes:
+      - name: ollama-data
+        persistentVolumeClaim:
+          claimName: ollama-storage
+      

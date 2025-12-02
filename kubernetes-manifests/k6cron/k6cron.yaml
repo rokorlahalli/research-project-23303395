@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: anomaly-load
+  namespace: app
+spec:
+  schedule: "0 15 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: k6
+            image: grafana/k6
+            command: ["k6", "run", "/scripts/anomaly.js"]
+            volumeMounts:
+              - name: script-volume
+                mountPath: /scripts
+          volumes:
+            - name: script-volume
+              configMap:
+                name: k6-scripts
+          restartPolicy: OnFailure

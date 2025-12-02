@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: memory-stress
+  namespace: app
+spec:
+  schedule: "05 13 * * *"  # runs daily at 9 AM
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: stress-ng
+            image: alexeiled/stress-ng:latest
+            command:
+              - /stress-ng
+            args:
+              - "--vm"
+              - "1"
+              - "--vm-bytes"
+              - "500M"
+              - "--timeout"
+              - "60s"
+          restartPolicy: Never
+

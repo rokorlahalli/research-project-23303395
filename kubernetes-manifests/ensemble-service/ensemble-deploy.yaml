@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ensemble-anomaly-api
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ensemble-anomaly-api
+  template:
+    metadata:
+      labels:
+        app: ensemble-anomaly-api
+    spec:
+      containers:
+      - name: ensemble-anomaly-api
+        image: rokorlahalli/ric-ensemble:v33
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        env:
+        - name: PROMETHEUS_URL
+          value: "http://kps-kube-prometheus-stack-prometheus.prometheus.svc.cluster.local:9090"
+        - name: PUSHGATEWAY_URL
+          value: "http://pushgateway-prometheus-pushgateway.prometheus.svc.cluster.local:9091"
+        - name: CSV_LOG_PATH
+          value: "/data/predictions_log.csv"
+        - name: SLACK_WEBHOOK_URL
+          value: "https://hooks.slack.com/services/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"
+        - name: OLLAMA_URL
+          value: "http://devops-assistant.app.svc.cluster.local:11434"
+        volumeMounts:
+        - name: ensemble-storage
+          mountPath: /data
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+      volumes:
+      - name: ensemble-storage
+        persistentVolumeClaim:
+          claimName: ensemble-pvc
+      imagePullSecrets:
+      - name: my-dockerhub-secret

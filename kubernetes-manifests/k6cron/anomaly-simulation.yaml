@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: anomaly-simulation
+  namespace: app
+spec:
+  # Run every 6 hours for now – adjust as needed
+  schedule: "*/20 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          # 1️⃣ HTTP load to real services
+          - name: k6
+            image: grafana/k6
+            command: ["k6", "run", "/scripts/highload.js"]
+            volumeMounts:
+              - name: script-volume
+                mountPath: /scripts
+
+          # 2️⃣ Node stress to drive CPU + RAM up
+          - name: stress-ng
+            image: alexeiled/stress-ng:latest
+            command: ["/stress-ng"]
+            args:
+              - "--cpu"
+              - "4"
+              - "--vm"
+              - "2"
+              - "--vm-bytes"
+              - "1G"
+              - "--timeout"
+              - "90s"
+
+          # Mount the k6 script from a ConfigMap
+          volumes:
+            - name: script-volume
+              configMap:
+                name: k6-scripts-highload
+

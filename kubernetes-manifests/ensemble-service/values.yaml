@@ -1,0 +1,8 @@
+prometheus:
+  prometheusSpec:
+    additionalScrapeConfigs:
+      - job_name: 'pushgateway'
+        honor_labels: true
+        static_configs:
+          - targets:
+              - 'pushgateway-prometheus-pushgateway.prometheus.svc.cluster.local:9091'

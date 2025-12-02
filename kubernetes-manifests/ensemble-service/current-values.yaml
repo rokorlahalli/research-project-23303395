@@ -1,0 +1,9 @@
+USER-SUPPLIED VALUES:
+prometheus:
+  prometheusSpec:
+    additionalScrapeConfigs:
+    - honor_labels: true
+      job_name: pushgateway
+      static_configs:
+      - targets:
+        - pushgateway-prometheus-pushgateway.prometheus.svc.cluster.local:9091

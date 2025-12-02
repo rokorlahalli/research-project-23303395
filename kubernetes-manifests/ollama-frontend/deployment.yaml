@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-assistant-frontend
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-assistant-frontend
+  template:
+    metadata:
+      labels:
+        app: devops-assistant-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: rokorlahalli/ric-ollama-fe:v9
+          ports:
+            - containerPort: 80

@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: transient-spike
+  namespace: app
+spec:
+  schedule: "0 3 * * *"  
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: stress
+            image: alpine/stress-ng
+            command: ["stress-ng"]
+            args: ["--cpu", "1", "--vm", "1", "--vm-bytes", "500M", "--timeout", "60s"]
+          restartPolicy: Never

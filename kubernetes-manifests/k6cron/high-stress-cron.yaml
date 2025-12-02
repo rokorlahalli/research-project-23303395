@@ -1,0 +1,53 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: high-stress
+  namespace: app
+spec:
+  # Schedule: once daily at 15:30 UTC — adjust as needed
+  schedule: "05 15 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          # 1️⃣ Application-level load (HTTP traffic)
+          - name: k6-load
+            image: grafana/k6
+            command: ["k6", "run", "/scripts/highload.js"]
+            volumeMounts:
+            - name: script-volume
+              mountPath: /scripts
+
+          # 2️⃣ Node-level stress (CPU + Memory)
+          - name: stress-ng
+            image: alexeiled/stress-ng:latest
+            command:
+              - /stress-ng
+            args:
+              - "--cpu"
+              - "4"
+              - "--vm"
+              - "2"
+              - "--vm-bytes"
+              - "1G"
+              - "--timeout"
+              - "120s"
+
+          volumes:
+          - name: script-volume
+            configMap:
+              name: k6-scripts-highload
+
+          restartPolicy: OnFailure
+          # optional: ensure it runs on same node as your main workloads
+          #affinity:
+          #  podAffinity:
+          #    requiredDuringSchedulingIgnoredDuringExecution:
+          #    - labelSelector:
+          #        matchExpressions:
+          #        - key: kubernetes.io/hostname
+          #          operator: In
+          #          values:
+          #          - gke-aiops-gke-cluste-aiops-user-nodep-085a33ea-9pnw
+          #      topologyKey: "kubernetes.io/hostname"

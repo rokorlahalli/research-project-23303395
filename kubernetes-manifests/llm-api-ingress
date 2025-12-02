@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devops-chat-ingress
+  namespace: app
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /ask-ai
+        pathType: Prefix
+        backend:
+          service:
+            name: ensemble-anomaly-api
+            port:
+              number: 8000
+
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: devops-assistant-frontend
+            port:
+              number: 80
