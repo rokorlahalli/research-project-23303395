@@ -42,24 +42,27 @@ Ollama / LLMs (optional)
 
 🚀 Deployment Guide
 1️⃣ Build & Push Docker Image
+```bash
 docker build -t docker pull rokorlahalli/ric-ensemble:v1 .
 docker push docker pull rokorlahalli/ric-ensemble:v1
-
+```
 2️⃣ Apply Kubernetes Manifests
+```bash
 kubectl apply -f manifests/pushgateway.yaml
 kubectl apply -f manifests/deployment.yaml
 kubectl apply -f manifests/service.yaml
 kubectl apply -f manifests/grafana/
 kubectl apply -f manifests/prometheus/
-
+```
 3️⃣ Verify Pods
+```bash
 kubectl get pods -n <your-app-namespace>
-
+```
 4️⃣ Test API
+```bash
 curl "<api-url>/predict?cpu=0.5&memory=0.7&..."
-
+```
 👨‍💻 Author
-
 Rohit Korlahalli
 Student ID - 23303395
 MSc Cloud Computing — National College of Ireland (NCI)
