@@ -1,4 +1,4 @@
-📌 Ensemble-Based Kubernetes Anomaly Detection Framework
+📌 Machine Learning based Ensemble Anomaly Detection in Kuberentes Environments
 
 A Lightweight ML + Observability Pipeline for Proactive AIOps
 
@@ -26,39 +26,6 @@ Optional LLM DevOps assistant for natural-language explanations and recommendati
 
 Supports real + synthetic workloads for evaluation and testing
 
-🧠 System Architecture
-Prometheus → Ensemble API (FastAPI) → Pushgateway → Grafana
-                              ↓
-                      LLM DevOps Assistant (optional)
-                              ↓
-                            Slack Alerts
-
-📂 Repository Structure
-📁 ensemble-k8s-anomaly-detection
-├── api/
-│   ├── main.py                     # FastAPI inference service
-│   ├── models/                     # Trained ML models (IF, XGB, LSTM)
-│   └── utils/                      # Preprocessing, inference logic
-│
-├── manifests/
-│   ├── deployment.yaml             # API deployment on GKE
-│   ├── service.yaml                # ClusterIP / NodePort / Ingress
-│   ├── pushgateway.yaml
-│   ├── grafana/                    # Dashboards + datasources
-│   └── prometheus/                 # Prometheus scrape configs
-│
-├── notebooks/
-│   ├── training-iforest.ipynb
-│   ├── training-xgboost.ipynb
-│   ├── training-lstm.ipynb
-│   └── ensemble-analysis.ipynb
-│
-├── frontend/ (optional)
-│   └── devops-chat-ui/             # LLM assistant frontend
-│
-├── README.md
-└── LICENSE (optional)
-
 ⚙️ Tech Stack
 
 Python, FastAPI, Uvicorn
@@ -75,8 +42,8 @@ Ollama / LLMs (optional)
 
 🚀 Deployment Guide
 1️⃣ Build & Push Docker Image
-docker build -t gcr.io/<project-id>/ensemble-api:v1 .
-docker push gcr.io/<project-id>/ensemble-api:v1
+docker build -t docker pull rokorlahalli/ric-ensemble:v1 .
+docker push docker pull rokorlahalli/ric-ensemble:v1
 
 2️⃣ Apply Kubernetes Manifests
 kubectl apply -f manifests/pushgateway.yaml
@@ -86,70 +53,10 @@ kubectl apply -f manifests/grafana/
 kubectl apply -f manifests/prometheus/
 
 3️⃣ Verify Pods
-kubectl get pods -n <namespace>
+kubectl get pods -n <your-app-namespace>
 
 4️⃣ Test API
 curl "<api-url>/predict?cpu=0.5&memory=0.7&..."
-
-📊 Grafana Dashboards
-
-Add your screenshots here:
-
-📸 /screenshots/grafana-dashboard.png
-📸 /screenshots/devops-assistant.png
-
-📢 Slack Alerting (Optional)
-
-Configure your Slack webhook:
-
-SLACK_WEBHOOK_URL: "<your-webhook>"
-
-
-Alerts are triggered when the ensemble predicts anomalies.
-
-🧑‍💻 LLM DevOps Assistant (Optional)
-
-The assistant provides:
-
-Natural-language explanations
-
-Recommendations (scale up/down, check node load, etc.)
-
-Interactive Q&A based on cluster status
-
-LLM endpoint example:
-
-curl "http://<ingress-ip>/ask-ai?query=Why%20is%20my%20CPU%20spiking?"
-
-📈 Model Evaluation
-
-Performance metrics include:
-
-Confusion matrices (IF, XGB, LSTM, Ensemble)
-
-Macro F1-score
-
-Anomaly detection latency
-
-Stability under varying workloads
-
-Refer to notebooks/ensemble-analysis.ipynb.
-
-🔮 Future Enhancements
-
-Add weighted ensemble voting
-
-Introduce online learning for adapting to workload drift
-
-Incorporate Kubernetes event logs into feature set
-
-Expand LLM assistant into a full AIOps automation module
-
-Build a plugin for Grafana-native anomaly queries
-
-📄 License
-
-MIT License (or whichever you choose)
 
 👨‍💻 Author
 
