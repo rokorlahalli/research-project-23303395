@@ -44,3 +44,5 @@ spec:
       - name: ensemble-storage
         persistentVolumeClaim:
           claimName: ensemble-pvc
+      imagePullSecrets:
+      - name: my-dockerhub-secret
