@@ -1,0 +1,35 @@
+alertmanager:
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 2Gi
+          storageClassName: standard-rwo
+
+grafana:
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClassName: standard-rwo
+  service:
+    type: ClusterIP
+
+  plugins:
+    - marcusolsson-json-datasource   # <-- REQUIRED FOR OLLAMA INTEGRATION
+
+prometheus:
+  prometheusSpec:
+    retention: 60d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 10Gi
+          storageClassName: standard-rwo
